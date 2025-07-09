@@ -1,0 +1,23 @@
+{
+  "name": "jd-creation-gas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "docs.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjyana/jd-creation-gas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjyana/jd-creation-gas/issues"
+  },
+  "homepage": "https://github.com/tjyana/jd-creation-gas#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

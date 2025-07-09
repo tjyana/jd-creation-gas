@@ -263,3 +263,6 @@ function onOpen() {
       .addItem('AI候補者サマリーを作成 (Azure OpenAI)', 'createCandidateSummary')
       .addToUi();
 }
+
+// Add this at the VERY END of your Google Apps Script file
+module.exports = { buildJdPrompt };
