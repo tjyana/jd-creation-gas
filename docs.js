@@ -144,6 +144,8 @@ function createCandidateSummary() {
     const summaryText = getAiSummary(prompt);
     const jdTitle = rowData[0] || '不明な求人票';
     const docTitle = `【求人票】${jdTitle}`;
+
+    // MOD: adjust jdTitle to have it actually be the jd title gleaned from the row data
     
     const docUrl = createGoogleDoc(docTitle, summaryText);
 
@@ -260,7 +262,7 @@ function getAiSummary(prompt) {
 function onOpen() {
   SpreadsheetApp.getUi()
       .createMenu('サマリー生成')
-      .addItem('AI候補者サマリーを作成 (Azure OpenAI)', 'createCandidateSummary')
+      .addItem('求人を作成', 'createCandidateSummary')
       .addToUi();
 }
 
