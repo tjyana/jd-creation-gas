@@ -16,54 +16,54 @@ const INTERNAL_NOTES_LINK_HEADER = "Internal Notes Link";
 // --- List of columns to include in the Job Description ---
 const JD_COLUMN_HEADERS = [
   "職種タイトル / Job Title",
-  "募集背景 / Background of the Recruitment",
-  "主な業務内容 / Main Responsibilities",
-  "仕事のやりがい・得られる経験 / Job Satisfaction and Experience Gained",
-  "期待する役割 / Expected Role",
-  "期待するマインド / Expected Mindset",
-  "求めるスキル・経験 / Desired Skills and Experience",
-  "あると望ましいスキル・経験 / Preferred Skills and Experience",
-  "日本語要件 / Japanese Language Requirements",
-  "英語要件 / English Language Requirements",
-  "こんな方に仲間になってほしい / We are looking for someone like this to join our team.",
-  "技術スタック / Technology Stack",
-  "使用ツール / Tools Used",
-  "参考URL / Reference URL"
+  "募集背景 /  Background of the Recruitment",
+  "主な業務内容 /  Main Responsibilities",
+  "仕事のやりがい・得られる経験 /  Job Satisfaction and Experience Gained",
+  "期待する役割 /  Expected Role",
+  "期待するマインド /  Expected Mindset",
+  "求めるスキル・経験 /  Desired Skills and Experience",
+  "あると望ましいスキル・経験 /  Preferred Skills and Experience",
+  "日本語要件 /  Japanese Language Requirements",
+  "英語要件 /  English Language Requirements",
+  "こんな方に仲間になってほしい /  We are looking for someone like this to join our team.",
+  "技術スタック /  Technology Stack",
+  "使用ツール /  Tools Used",
+  "参考URL /  Reference URL"
 ];
 
 // --- List of columns to include in the Internal Notes document ---
 const INTERNAL_NOTES_COLUMN_HEADERS = [
-  "担当ハイヤリングマネージャー名 / Name of the Responsible Hiring Manager",
-  "担当リクルーター名 / Name of the Responsible Recruiter",
-  "職種 / Job Title",
-  "勤務形態 / Employment Type",
-  "勤務地 / Work Location",
-  "配属先部署名 / Assigned Department Name",
-  "募集背景 / Background of the Recruitment",
-  "具体的な募集背景 / Specific Background of the Recruitment",
-  "採用納期 / Hiring Deadline",
-  "上記の理由/背景をご教示下さい / Please provide the reason/background for the above.",
-  "採用温度感 / Urgency of Hiring",
-  "想定グレード / Expected Grade",
-  "オファー年収のイメージ / Estimated Annual Salary Offer",
-  "年齢 / Ageお任せしたい業務 / Tasks to be Assigned",
-  "上記をお任せすることにあたって必要な経験・スキル / Experience and Skills Required for the Above-mentioned Tasks",
-  "ターゲット企業や業界 / Target Companies and Industries",
-  "技術課題の有無 / Presence of Technical Challenges",
-  "＜上記質問で「あり_track」を選択した方＞該当課題のURLを展開して下さい / <For those who selected \"Present (Track)\" in the above question> Please provide the URL for the relevant challenge.",
-  "＜上記質問で「あり_track以外」を選択した方＞課題を展開して下さい / <For those who selected \"Present (Other than Track)\" in the above question> Please outline the challenge.",
-  "技術課題レビュー担当者 / Reviewer for Technical Challenges",
-  "カジュアル面談 担当者 / Casual Interview Representative",
-  "カジュアル面談担当者の英語対応可否 / English Proficiency of the Casual Interview Representative",
-  "一次面接 担当者 / First Interview Representative",
-  "一次面接担当者の英語対応可否 / English Proficiency of the First Interview Representative",
-  "二次面接 担当者 / Second Interview Representative",
-  "二次面接担当者の英語対応可否 / English Proficiency of the Second Interview Representative",
-  "最終面接 担当者 / Final Interview Representative",
-  "最終面接担当者の英語対応可否 / English Proficiency of the Final Interview Representative",
-  "その他 / Otherオファー面談 担当者 / Offer Meeting Representative",
-  "エージェント利用可否 / Availability of Agent Usage",
-  "ビザサポートが必要な海外在住者に対してオープンしますか？ / Are you open to candidates residing overseas who require visa support?"
+  "担当ハイヤリングマネージャー名 /  Name of the Responsible Hiring Manager",
+  "担当リクルーター名 /  Name of the Responsible Recruiter",
+  "職種 /  Job Title",
+  "勤務形態 /  Employment Type",
+  "勤務地 /  Work Location",
+  "配属先部署名 /  Assigned Department Name",
+  "募集背景 /  Background of the Recruitment",
+  "具体的な募集背景 /  Specific Background of the Recruitment",
+  "採用納期 /  Hiring Deadline",
+  "上記の理由/背景をご教示下さい /  Please provide the reason/background for the above.",
+  "採用温度感 /  Urgency of Hiring",
+  "想定グレード /  Expected Grade",
+  "オファー年収のイメージ /  Estimated Annual Salary Offer",
+  "年齢 / Ageお任せしたい業務 /  Tasks to be Assigned",
+  "上記をお任せすることにあたって必要な経験・スキル /  Experience and Skills Required for the Above-mentioned Tasks",
+  "ターゲット企業や業界 /  Target Companies and Industries",
+  "技術課題の有無 /  Presence of Technical Challenges",
+  "＜上記質問で「あり_track」を選択した方＞該当課題のURLを展開して下さい /  <For those who selected \"Present (Track)\" in the above question> Please provide the URL for the relevant challenge.",
+  "＜上記質問で「あり_track以外」を選択した方＞課題を展開して下さい /  <For those who selected \"Present (Other than Track)\" in the above question> Please outline the challenge.",
+  "技術課題レビュー担当者 /  Reviewer for Technical Challenges",
+  "カジュアル面談 担当者 /  Casual Interview Representative",
+  "カジュアル面談担当者の英語対応可否 /  English Proficiency of the Casual Interview Representative",
+  "一次面接 担当者 /  First Interview Representative",
+  "一次面接担当者の英語対応可否 /  English Proficiency of the First Interview Representative",
+  "二次面接 担当者 /  Second Interview Representative",
+  "二次面接担当者の英語対応可否 /  English Proficiency of the Second Interview Representative",
+  "最終面接 担当者 /  Final Interview Representative",
+  "最終面接担当者の英語対応可否 /  English Proficiency of the Final Interview Representative",
+  "その他 / Otherオファー面談 担当者 /  Offer Meeting Representative",
+  "エージェント利用可否 /  Availability of Agent Usage",
+  "ビザサポートが必要な海外在住者に対してオープンしますか？ /  Are you open to candidates residing overseas who require visa support?"
 ];
 
 
@@ -77,7 +77,7 @@ const INTERNAL_NOTES_COLUMN_HEADERS = [
  * @param {Object} e The event object passed by the onFormSubmit trigger.
  */
 function processFormSubmission(e) {
-  const ui = SpreadsheetApp.getUi();
+  // const ui = SpreadsheetApp.getUi();
   try {
     // --- 1. GET DATA FROM THE EVENT ---
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -138,17 +138,35 @@ function processFormSubmission(e) {
  */
 function buildJdPrompt(headers, rowData) {
   let interviewNotes = "";
+  
+  Logger.log("--- Starting buildJdPrompt ---");
+  Logger.log(`Total headers found in sheet: ${headers.length}`);
+
   // Instead of looping through all headers, we loop through our specific list
   JD_COLUMN_HEADERS.forEach(headerName => {
+    // LOG 1: What header are we looking for from our constant list?
+    Logger.log(`Checking for header: '${headerName}'`);
+
     const colIndex = headers.indexOf(headerName);
+
+    // LOG 2: Did we find it? Where?
+    Logger.log(`Found at index: ${colIndex}`);
+
+    // If we found it (index is not -1) and the cell has data...
     if (colIndex !== -1 && rowData[colIndex] && rowData[colIndex].toString().trim() !== '') {
       interviewNotes += `${headerName}:\n${rowData[colIndex]}\n\n`;
+      // LOG 3: Log that we are adding this content.
+      Logger.log(`SUCCESS: Found data for '${headerName}' and added it.`);
     }
   });
+
+  Logger.log(`Final JD prompt content length: ${interviewNotes.length}`);
+  Logger.log("--- Finished buildJdPrompt ---");
 
   if (interviewNotes.trim() === "") {
     return null;
   }
+
 
   // The prompt template remains the same
   const prompt = `
@@ -341,5 +359,5 @@ function createOnSubmitTrigger() {
     .onFormSubmit()
     .create();
   
-  SpreadsheetApp.getUi().alert('The trigger has been created! The script will now run automatically on new form submissions.');
+  // SpreadsheetApp.getUi().alert('The trigger has been created! The script will now run automatically on new form submissions.');
 }
