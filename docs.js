@@ -9,7 +9,7 @@ const AZURE_DEPLOYMENT_MODEL = 'gpt-4o';
 const AZURE_APIM_BASE_URL = "https://mf-genai-poc-apim.azure-api.net/esotad";
 
 // --- Headers for the final documents ---
-const DOC_LINK_HEADER_JP = "ドキュメントリンク";
+const DOC_LINK_HEADER_JP = "求人内容";
 const DOC_LINK_HEADER_EN = "Document Link";
 const INTERNAL_NOTES_LINK_HEADER = "Internal Notes Link";
 
@@ -176,10 +176,18 @@ I will list the JD sections and submitted information down below.
 Please parse out the necessary information from the submitted information and fill in the JD sections accordingly.
 
 Output format:
-- The output format should start with the JD section header, followed by the submitted information on the next line, as below:
+- The output format should start with the JD section header, followed by the submitted information on the next line, followed by an empty line, and then repeat the pattern for other JD sections.
+- Please do not include any additional formatting or punctuations outside of the section headers and the submitted information.
+- Please do not include any additional text or explanations outside of the JD sections.
+- Example output format:
+
 (Section Header)
 (Submitted information)
-- The document will be outputted to Google Docs, so please take that into account when bolding and doing other formatting.
+
+(Next Section Header)
+(Submitted information)
+
+
 
 Output language:
 Please output two versions of the JD - one in Japanese and one in English.
@@ -232,6 +240,8 @@ The submitted information is below:
 
 
   ${interviewNotes}
+
+  
   `;
    return prompt;
 }
