@@ -67,6 +67,12 @@ const INTERNAL_NOTES_COLUMN_HEADERS = [
 ];
 
 
+
+
+
+
+
+
 // =================================================================
 // MAIN TRIGGERED FUNCTION
 // =================================================================
@@ -137,6 +143,64 @@ function processFormSubmission(e) {
  * @returns {string|null} The fully formatted prompt string, or null if no relevant data is found.
  */
 function buildJdPrompt(headers, rowData) {
+  
+  // --- Set variables ---
+  const jobTitleHeader = "職種タイトル / Job Title";
+  const jobTitleIndex = headers.indexOf(jobTitleHeader);
+  const jobTitle = jobTitleIndex !== -1 && rowData[jobTitleIndex] ? rowData[jobTitleIndex] : '不明な求人票';
+
+  const recruitmentBackgroundHeader = "募集背景 /  Background of the Recruitment";
+  const recruitmentBackgroundIndex = headers.indexOf(recruitmentBackgroundHeader);
+  const recruitmentBackground = rowData[recruitmentBackgroundIndex] || '記載なし';
+
+  const mainResponsibilitiesHeader = "主な業務内容 /  Main Responsibilities";
+  const mainResponsibilitiesIndex = headers.indexOf(mainResponsibilitiesHeader);
+  const mainResponsibilities = rowData[mainResponsibilitiesIndex] || '記載なし';
+
+  const experienceGainedHeader = "仕事のやりがい・得られる経験 /  Job Satisfaction and Experience Gained";
+  const experienceGainedIndex = headers.indexOf(experienceGainedHeader);
+  const experienceGained = rowData[experienceGainedIndex] || '記載なし';
+
+  const expectedRoleHeader = "期待する役割 /  Expected Role";
+  const expectedRoleIndex = headers.indexOf(expectedRoleHeader);
+  const expectedRole = rowData[expectedRoleIndex] || '記載なし';
+
+  const expectedMindsetHeader = "期待するマインド /  Expected Mindset";
+  const expectedMindsetIndex = headers.indexOf(expectedMindsetHeader);
+  const expectedMindset = rowData[expectedMindsetIndex] || '記載なし';
+
+  const idealCandidateHeader = "こんな方に仲間になってほしい /  We are looking for someone like this to join our team.";
+  const idealCandidateIndex = headers.indexOf(idealCandidateHeader);
+  const idealCandidateProfile = rowData[idealCandidateIndex] || '記載なし';
+
+  const requiredSkillsHeader = "求めるスキル・経験 /  Desired Skills and Experience";
+  const requiredSkillsIndex = headers.indexOf(requiredSkillsHeader);
+  const requiredSkills = rowData[requiredSkillsIndex] || '記載なし';
+
+  const preferredSkillsHeader = "あると望ましいスキル・経験 /  Preferred Skills and Experience";
+  const preferredSkillsIndex = headers.indexOf(preferredSkillsHeader);
+  const preferredSkills = rowData[preferredSkillsIndex] || '記載なし';
+
+  const japaneseRequirementsHeader = "日本語要件 /  Japanese Language Requirements";
+  const japaneseRequirementsIndex = headers.indexOf(japaneseRequirementsHeader);
+  const japaneseRequirements = rowData[japaneseRequirementsIndex] || '記載なし';
+
+  const englishRequirementsHeader = "英語要件 /  English Language Requirements";
+  const englishRequirementsIndex = headers.indexOf(englishRequirementsHeader);
+  const englishRequirements = rowData[englishRequirementsIndex] || '記載なし';
+
+  const techStackHeader = "技術スタック /  Technology Stack";
+  const techStackIndex = headers.indexOf(techStackHeader);
+  const techStack = rowData[techStackIndex] || '記載なし';
+
+  const toolsUsedHeader = "使用ツール /  Tools Used";
+  const toolsUsedIndex = headers.indexOf(toolsUsedHeader);
+  const toolsUsed = rowData[toolsUsedIndex] || '記載なし';
+
+  const referenceUrlHeader = "参考URL /  Reference URL";
+  const referenceUrlIndex = headers.indexOf(referenceUrlHeader);
+  const referenceUrl = rowData[referenceUrlIndex] || '記載なし';
+  
   let interviewNotes = "";
   
   Logger.log("--- Starting buildJdPrompt ---");
@@ -167,6 +231,10 @@ function buildJdPrompt(headers, rowData) {
     return null;
   }
 
+  
+  // Assume 'headers' and 'rowData' are variables available in your script.
+
+  
 
   // The prompt template remains the same
   const prompt = `
@@ -241,7 +309,7 @@ The submitted information is below:
 
   ${interviewNotes}
 
-  
+
   `;
    return prompt;
 }
