@@ -39,7 +39,7 @@ const INTERNAL_NOTES_COLUMN_HEADERS = [
   "勤務形態 /  Employment Type",
   "勤務地 /  Work Location",
   "配属先部署名 /  Assigned Department Name",
-  "募集背景 /  Background of the Recruitment",
+  "募集の理由 /  Reason for Recruitment",
   "具体的な募集背景 /  Specific Background of the Recruitment",
   "採用納期 /  Hiring Deadline",
   "上記の理由/背景をご教示下さい /  Please provide the reason/background for the above.",
@@ -176,12 +176,13 @@ I will list the JD sections and submitted information down below.
 Please parse out the necessary information from the submitted information and fill in the JD sections accordingly.
 
 Output format:
-The output format should start with the JD section header, followed by the submitted information on the next line, as below:
+- The output format should start with the JD section header, followed by the submitted information on the next line, as below:
 (Section Header)
 (Submitted information)
+- The document will be outputted to Google Docs, so please take that into account when bolding and doing other formatting.
 
 Output language:
-I would like you to output two versions of the JD - one in Japanese and one in English.
+Please output two versions of the JD - one in Japanese and one in English.
 The submitted information will be mainly written in one language - please first make the JD in that language, and then use that as a base to translate and make the JD in the other language. Other notes:
 - The job description sections have both Japanese and English section headers. (Eg '募集背景 / Background of the Recruitment’). Please only output the section headers in that language (eg. For the Japanese version only display '募集背景' and leave out 'Background of the Recruitment').
 - Within the Technology Stack and Tools Used sections, please do the same and only output the appropriate language (eg. For the Japanese version only display 'リポジトリ管理' and leave out 'Repository Management').
