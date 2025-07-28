@@ -95,6 +95,14 @@ function processFormSubmission(e) {
     const jdTitleHeader = "職種タイトル / Job Title";
     const jdTitleIndex = headers.indexOf(jdTitleHeader);
     const jdTitle = jdTitleIndex !== -1 && rowData[jdTitleIndex] ? rowData[jdTitleIndex] : '不明な求人票';
+
+    const jdDeptNameHeader = "配属先部署名 /  Assigned Department Name";
+    const jdDeptNameIndex = headers.indexOf(jdDeptNameHeader);
+    const jdDeptName = jdDeptNameIndex !== -1 && rowData[jdDeptNameIndex] ? rowData[jdDeptNameIndex] : '不明な求人票';
+
+    const jdWorkLocationHeader = "勤務地 /  Work Location";
+    const jdWorkLocationIndex = headers.indexOf(jdWorkLocationHeader);
+    const jdWorkLocation = jdWorkLocationIndex !== -1 && rowData[jdWorkLocationIndex] ? rowData[jdWorkLocationIndex] : '不明な勤務地';
     
     // --- 2. BUILD CONTENT & PROMPT ---
     const jdPrompt = buildJdPrompt(headers, rowData);
@@ -109,14 +117,14 @@ function processFormSubmission(e) {
     let jdDocUrl = "";
     if (jdPrompt) {
       const summaryText = getAiSummary(jdPrompt);
-      const docTitle = `【求人票】${jdTitle}`;
+      const docTitle = `【${jdTitle}】${jdDeptName}_${jdWorkLocation}`;
       jdDocUrl = createGoogleDoc(docTitle, summaryText);
     }
 
     // --- 4. CREATE INTERNAL NOTES DOC (if content exists) ---
     let internalNotesDocUrl = "";
     if (internalNotesContent) {
-      const docTitle = `[Internal Notes] - ${jdTitle}`;
+      const docTitle = `[Internal Notes] - 【${jdTitle}】${jdDeptName}_${jdWorkLocation}`;
       internalNotesDocUrl = createGoogleDoc(docTitle, internalNotesContent);
     }
     
