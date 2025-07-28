@@ -208,36 +208,75 @@ function buildJdPrompt(headers, rowData) {
   const referenceUrlHeader = "参考URL /  Reference URL";
   const referenceUrlIndex = headers.indexOf(referenceUrlHeader);
   const referenceUrl = rowData[referenceUrlIndex] || '記載なし';
+
+
+
+  // --Define the raw info to be included in the JD--
+
+  const rawInformationBlock = `
+- 職種タイトル / Job Title: ${jobTitle}
+- 募集背景 / Background of the Recruitment: ${recruitmentBackground}
+- 主な業務内容 / Main Responsibilities: ${mainResponsibilities}
+- 仕事のやりがい・得られる経験 / Job Satisfaction and Experience Gained: ${experienceGained}
+- 期待する役割 / Expected Role: ${expectedRole}
+- 期待するマインド / Expected Mindset: ${expectedMindset}
+- 求めるスキル・経験 / Desired Skills and Experience: ${requiredSkills}
+- あると望ましいスキル・経験 / Preferred Skills and Experience: ${preferredSkills}
+- 日本語要件 / Japanese Language Requirements: ${japaneseRequirements}
+- 英語要件 / English Language Requirements: ${englishRequirements}
+- こんな方に仲間になってほしい / We are looking for someone like this to join our team.: ${idealCandidateProfile}
+- 技術スタック / Technology Stack: ${techStack}
+- 使用ツール / Tools Used: ${toolsUsed}
+- 参考URL / Reference URL: ${referenceUrl}
+`;
+
+
+// Set the boilerplate text for preferred skills and English requirements
+const preferredSkillsBoilerplateEN = `Experience in AI development and/or experience in using AI tools to improve development processes.
+Money Forward recently announced our AI Strategy roadmap which focuses on improving AI-driven operational efficiencies, as well as integrating AI agents into our products to deliver better value to our users. (More information here)
+`;
+const preferredSkillsBoilerplateJP = `AIの開発経験もしくはAIツールを使用した開発経験
+Money Forward AI Vision 2025にて発表の通り、マネーフォワードではAIを使った業務効率化に取り組んでいる状況かつ、将来的には全製品にAIエージェントを導入する想定であるため
+`;
+
+const englishRequirementsBoilerplateEN = `(Note: If you have other qualifications or experiences demonstrating English proficiency, such as EIKEN Pre-1, EIKEN 2nd Grade (CSE score 1950+), TOEFL iBT 60+, IELTS 5.0+, or Cambridge FCE.), feel free to discuss with us) 
+For those without a TOEIC 700+ equivalent score, they will be asked to take a designated test during the interview process (generally after the first interview)
+`;
+const englishRequirementsBoilerplateJP = `※TOEIC以外にも英語力がわかる資格や経験をお持ちの方はご相談ください
+例：英検準1級、英検2級（英検CSEスコア1950以上）、TOEFL iBT 60以上、IELTS 5.0以上、ケンブリッジ英語検定FCEなど
+※その他、英語力がわかる資格や経験については応相談
+※TOEIC 700点相当以上の資格をお持ちでない方については選考の過程で弊社指定の試験を受験いただきます。（原則、一次面接後を想定）
+`;
   
-  let interviewNotes = "";
+  // let interviewNotes = "";
   
-  Logger.log("--- Starting buildJdPrompt ---");
-  Logger.log(`Total headers found in sheet: ${headers.length}`);
+  // Logger.log("--- Starting buildJdPrompt ---");
+  // Logger.log(`Total headers found in sheet: ${headers.length}`);
 
-  // Instead of looping through all headers, we loop through our specific list
-  JD_COLUMN_HEADERS.forEach(headerName => {
-    // LOG 1: What header are we looking for from our constant list?
-    Logger.log(`Checking for header: '${headerName}'`);
+  // // Instead of looping through all headers, we loop through our specific list
+  // JD_COLUMN_HEADERS.forEach(headerName => {
+  //   // LOG 1: What header are we looking for from our constant list?
+  //   Logger.log(`Checking for header: '${headerName}'`);
 
-    const colIndex = headers.indexOf(headerName);
+  //   const colIndex = headers.indexOf(headerName);
 
-    // LOG 2: Did we find it? Where?
-    Logger.log(`Found at index: ${colIndex}`);
+  //   // LOG 2: Did we find it? Where?
+  //   Logger.log(`Found at index: ${colIndex}`);
 
-    // If we found it (index is not -1) and the cell has data...
-    if (colIndex !== -1 && rowData[colIndex] && rowData[colIndex].toString().trim() !== '') {
-      interviewNotes += `${headerName}:\n${rowData[colIndex]}\n\n`;
-      // LOG 3: Log that we are adding this content.
-      Logger.log(`SUCCESS: Found data for '${headerName}' and added it.`);
-    }
-  });
+  //   // If we found it (index is not -1) and the cell has data...
+  //   if (colIndex !== -1 && rowData[colIndex] && rowData[colIndex].toString().trim() !== '') {
+  //     interviewNotes += `${headerName}:\n${rowData[colIndex]}\n\n`;
+  //     // LOG 3: Log that we are adding this content.
+  //     Logger.log(`SUCCESS: Found data for '${headerName}' and added it.`);
+  //   }
+  // });
 
-  Logger.log(`Final JD prompt content length: ${interviewNotes.length}`);
-  Logger.log("--- Finished buildJdPrompt ---");
+  // Logger.log(`Final JD prompt content length: ${interviewNotes.length}`);
+  // Logger.log("--- Finished buildJdPrompt ---");
 
-  if (interviewNotes.trim() === "") {
-    return null;
-  }
+  // if (interviewNotes.trim() === "") {
+  //   return null;
+  // }
 
   
   // Assume 'headers' and 'rowData' are variables available in your script.
@@ -246,76 +285,135 @@ function buildJdPrompt(headers, rowData) {
 
   // The prompt template remains the same
   const prompt = `
-I would like help creating a job description (JD) based on the submitted information from the hiring department.
+I would like help creating a job description (JD) based on information from the hiring department.
+Your goal is to create an English version and Japanese version of the JD based on their respective output formats below. 
 
-I will list the JD sections and submitted information down below.
-Please parse out the necessary information from the submitted information and fill in the JD sections accordingly.
+### RAW INFORMATION
+Here is the data provided by the hiring manager. Use this information to fill out the templates below.
+${rawInformationBlock}
 
-Output format:
-- The output format should start with the JD section header, followed by the submitted information on the next line, followed by an empty line, and then repeat the pattern for other JD sections.
-- Please do not include any additional formatting or punctuations outside of the section headers and the submitted information.
-- Please do not include any additional text or explanations outside of the JD sections.
-- Example output format:
-
-(Section Header)
-(Submitted information)
-
-(Next Section Header)
-(Submitted information)
+### YOUR TASK 
+1. **Analyze**: Determine the primary language used in the RAW INFORMATION above. 
+2. **Write**: Create the complete job description in that primary language first, following its template. 
+3. **Translate**: Translate the version you just wrote into the other language, following its template. 
+4. **Expand**: If any section has minimal information, expand it to be 3-4 professional sentences. 
+5. **Omit**: If a section's information is blank, omit the entire section from the output. 
+6. **Format the Technology Lists**: For the 'Technology Stack' and 'Tools Used' sections, take the unstructured information from the information and organize it into a categorized list. **The final output should use the same categories as the example shown in the templates below.** If the manager's notes don't mention a category, omit that category from the final list.
 
 
+Final output format:
 
-Output language:
-Please output two versions of the JD - one in Japanese and one in English.
-The submitted information will be mainly written in one language - please first make the JD in that language, and then use that as a base to translate and make the JD in the other language. Other notes:
-- The job description sections have both Japanese and English section headers. (Eg '募集背景 / Background of the Recruitment’). Please only output the section headers in that language (eg. For the Japanese version only display '募集背景' and leave out 'Background of the Recruitment').
-- Within the Technology Stack and Tools Used sections, please do the same and only output the appropriate language (eg. For the Japanese version only display 'リポジトリ管理' and leave out 'Repository Management').
-- For 英語要件 / English Language Requirements section, please always include the following at the end of the section depending on the language:English: (Note: If you have other qualifications or experiences demonstrating English proficiency, such as EIKEN Pre-1, EIKEN 2nd Grade (CSE score 1950+), TOEFL iBT 60+, IELTS 5.0+, or Cambridge FCE.), feel free to discuss with us) For those without a TOEIC 700+ equivalent score, they will be asked to take a designated test during the interview process (generally after the first interview).Japanese: ※TOEIC以外にも英語力がわかる資格や経験をお持ちの方はご相談ください例：英検準1級、英検2級（英検CSEスコア1950以上）、TOEFL iBT 60以上、IELTS 5.0以上、ケンブリッジ英語検定FCEなど※その他、英語力がわかる資格や経験については応相談※TOEIC 700点相当以上の資格をお持ちでない方については選考の過程で弊社指定の試験を受験いただきます。（原則、一次面接後を想定）
-- For あると望ましいスキル・経験 / Preferred Skills and Experience section, please always include the following at the end of the section depending on the language:English: Experience in AI development and/or experience in using AI tools to improve development processes.Money Forward recently announced our AI Strategy roadmap which focuses on improving AI-driven operational efficiencies, as well as integrating AI agents into our products to deliver better value to our users. (More information here)Japanese: AIの開発経験もしくはAIツールを使用した開発経験Money Forward AI Vision 2025にて発表の通り、マネーフォワードではAIを使った業務効率化に取り組んでいる状況かつ、将来的には全製品にAIエージェントを導入する想定であるため
+### ENGLISH OUTPUT TEMPLATE
+
+Job Title 
+{job_title_content} 
+
+Background of the Recruitment 
+{recruitment_background_content} 
+
+Main Responsibilities 
+{main_responsibilities_content} 
+
+Job Satisfaction and Experience Gained 
+{experience_gained_content} 
+
+Expected Role 
+{expected_role_content} 
+
+Expected Mindset 
+{expected_mindset_content} 
+
+Desired Skills and Experience 
+{desired_skills_content} 
+
+Preferred Skills and Experience 
+{preferred_skills_content} 
+${preferredSkillsBoilerplateEN} 
+
+Japanese Language Requirements 
+{japanese_requirements_content} 
+
+English Language Requirements 
+{english_requirements_content} 
+${englishRequirementsBoilerplateEN} 
+
+We are looking for someone like this to join our team. 
+{ideal_candidate_content} 
+
+Technology Stack 
+・Web Server-side：Java (Jersey, Guice, jOOQ) 
+・Database：MySQL ・Middleware：Docker, Nginx, Consul 
+・Platform：AWS, オンプレミス 
+{additional_tech_stack_content} 
+
+Tools Used 
+・Repository Management ：GitHub ・CI/CD：CircleCI, Jenkins, Github Actions 
+・Development Environment ：Docker, Terraform Enterprise 
+・Monitoring ：DataDog, Rollbar, Sentry 
+・Communication ：Slack 
+・Security ：Dependabot {additional_tools_used_content} 
+
+Reference URL {reference_url_content}
 
 
-If the submitted information is blank for a certain section, that section can be omitted.
-
-If the submitted information is minimal, please expand the information in that section as necessary, so the candidate has a good idea of the position's details.
-Please try to aim for 3-4 sentences when expanding a section.
 
 
-The JD sections are below:
+### JAPANESE OUTPUT TEMPLATE
 
+職種タイトル
+{job_title_content_jp}
 
-職種タイトル / Job Title
+募集背景
+{recruitment_background_content_jp}
 
-募集背景 / Background of the Recruitment
+主な業務内容
+{main_responsibilities_content_jp}
 
-主な業務内容 / Main Responsibilities*
+仕事のやりがい・得られる経験
+{experience_gained_content_jp}
 
-仕事のやりがい・得られる経験 / Job Satisfaction and Experience Gained
+期待する役割
+{expected_role_content_jp}
 
-期待する役割 / Expected Role
+期待するマインド
+{expected_mindset_content_jp}
 
-期待するマインド / Expected Mindset
+求めるスキル・経験
+{desired_skills_content_jp}
 
-求めるスキル・経験 / Desired Skills and Experience*
+あると望ましいスキル・経験
+{preferred_skills_content_jp}
+${preferredSkillsBoilerplateJP}
 
-あると望ましいスキル・経験 / Preferred Skills and Experience*
+日本語要件
+{japanese_requirements_content_jp}
 
-日本語要件 / Japanese Language Requirements*
+英語要件
+{english_requirements_content_jp}
+${englishRequirementsBoilerplateJP}
 
-英語要件 / English Language Requirements*
+こんな方に仲間になってほしい
+{ideal_candidate_content_jp}
 
-こんな方に仲間になってほしい / We are looking for someone like this to join our team.
+技術スタック
+・Webサーバーサイド：Java (Jersey, Guice, jOOQ)
+・データベース：MySQL
+・ミドルウェア：Docker, Nginx, Consul
+・プラットフォーム：AWS, オンプレミス
+{additional_tech_stack_content_jp}
 
-技術スタック / Technology Stack
+使用ツール
+・リポジトリ管理：GitHub
+・CI/CD：CircleCI, Jenkins, Github Actions
+・開発環境：Docker, Terraform Enterprise
+・監視：DataDog, Rollbar, Sentry
+・コミュニケーション：Slack
+・セキュリティ：Dependabot
+{additional_tools_used_content_jp}
 
-使用ツール / Tools Used
+参考URL
+{reference_url_content_jp}
 
-参考URL / Reference URL
-
-
-The submitted information is below:
-
-
-  ${interviewNotes}
 
 
   `;
