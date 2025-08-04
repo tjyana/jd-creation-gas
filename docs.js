@@ -48,22 +48,28 @@ const INTERNAL_NOTES_COLUMN_HEADERS = [
 
 /**
  * Main function triggered by a form submission. Orchestrates the entire process.
+ * REVISED: Now translates the job title to use in the document filenames.
  */
 function processFormSubmission(e) {
   try {
-    // --- 1. GET DATA FROM THE EVENT ---
+    // --- 1. GET DATA FROM THE EVENT (Unchanged) ---
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     const submittedRange = e.range;
     const submittedRowIndex = submittedRange.getRowIndex();
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const rowData = sheet.getRange(submittedRowIndex, 1, 1, sheet.getLastColumn()).getValues()[0];
 
-    // Get info for doc titles
-    const jdTitle = getSheetData(headers, rowData, "職種タイトル / Job Title", '不明な求人');
+    // --- NEW: Get the original title and translate it ---
+    const originalJdTitle = getSheetData(headers, rowData, "職種タイトル / Job Title", '不明な求人');
+    // Use LanguageApp to translate the title. The '' for source language means 'auto-detect'.
+    const japaneseJdTitle = LanguageApp.translate(originalJdTitle, '', 'ja');
+    const englishJdTitle = LanguageApp.translate(originalJdTitle, '', 'en');
+    
+    // Get other info for doc titles (unchanged)
     const jdDeptName = getSheetData(headers, rowData, "配属先部署名 /  Assigned Department Name", '不明な部署');
     const jdWorkLocation = getSheetData(headers, rowData, "勤務地 /  Work Location", '不明な勤務地');
 
-    // --- 2. BUILD PROMPT & GET AI RESPONSE ---
+    // --- 2. BUILD PROMPT & GET AI RESPONSE (Unchanged) ---
     const jdPrompt = buildJdPrompt(headers, rowData);
     if (!jdPrompt) {
       Logger.log("Row " + submittedRowIndex + " appears to be empty. Skipping.");
@@ -71,29 +77,29 @@ function processFormSubmission(e) {
     }
     const fullAiResponse = getAiSummary(jdPrompt);
 
-    // --- 3. PARSE AND BUILD FINAL CONTENT ---
+    // --- 3. PARSE AND BUILD FINAL CONTENT (Unchanged) ---
     const parsedJds = parseAiResponse(fullAiResponse);
-
     const japaneseInternalNotes = buildInternalNotesContent('jp', headers, rowData);
     const englishInternalNotes = buildInternalNotesContent('en', headers, rowData);
-
-    const finalJapaneseContent = parsedJds.japanese + "\n\n---\n\n## Internal Recruiter Notes\n\n" + japaneseInternalNotes;
-    const finalEnglishContent = parsedJds.english + "\n\n---\n\n## Internal Recruiter Notes\n\n" + englishInternalNotes;
+    const finalJapaneseContent = parsedJds.japanese + "\n\n---\n\n## フォーム回答内容\n\n" + japaneseInternalNotes;
+    const finalEnglishContent = parsedJds.english + "\n\n---\n\n## Form response content \n\n" + englishInternalNotes;
 
     // --- 4. CREATE THE TWO GOOGLE DOCS ---
     let japaneseDocUrl = "";
     if (parsedJds.japanese) {
-      const docTitle = `(JP) 【${jdTitle}】${jdDeptName}_${jdWorkLocation}`;
+      // MODIFIED: Use the translated Japanese title for the filename
+      const docTitle = `(JP) 【${japaneseJdTitle}】${jdDeptName}_${jdWorkLocation}`;
       japaneseDocUrl = createGoogleDoc(docTitle, finalJapaneseContent);
     }
 
     let englishDocUrl = "";
     if (parsedJds.english) {
-      const docTitle = `(EN) - 【${jdTitle}】${jdDeptName}_${jdWorkLocation}`;
+      // MODIFIED: Use the translated English title for the filename
+      const docTitle = `(EN) - 【${englishJdTitle}】${jdDeptName}_${jdWorkLocation}`;
       englishDocUrl = createGoogleDoc(docTitle, finalEnglishContent);
     }
     
-    // --- 5. WRITE LINKS BACK TO SHEET ---
+    // --- 5. WRITE LINKS BACK TO SHEET (Unchanged) ---
     updateSheetWithLinks(sheet, submittedRowIndex, headers, japaneseDocUrl, englishDocUrl);
 
   } catch (error) {
