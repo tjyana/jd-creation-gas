@@ -309,37 +309,56 @@ function buildInternalNotesContent(language, headers, rowData) {
   return notesContent.trim() === "" ? "No internal notes provided." : notesContent;
 }
 
+
 /**
- * Parses the AI's response into separate Japanese and English strings.
+ * REVISED: This function was buggy. This new version correctly parses the AI's 
+ * response into separate Japanese and English strings, regardless of which language
+ * the AI outputs first.
+ * @param {string} fullText - The complete text block from the AI.
+ * @returns {Object} An object with 'japanese' and 'english' properties.
  */
 function parseAiResponse(fullText) {
+  // Define the markers we are looking for.
   const englishMarker = "### ENGLISH OUTPUT TEMPLATE";
   const japaneseMarker = "### JAPANESE OUTPUT TEMPLATE";
-  
+  const fallbackEnglishMarker = "### ENGLISH OUTPUT";
+  const fallbackJapaneseMarker = "### JAPANESE OUTPUT";
+
   let englishContent = "";
   let japaneseContent = "";
-  
-  const japaneseStartIndex = fullText.indexOf(japaneseMarker);
-  const englishStartIndex = fullText.indexOf(englishMarker);
 
+  // Find the starting position of the English block, trying the full marker first, then a fallback.
+  let englishStartIndex = fullText.indexOf(englishMarker);
+  let actualEnglishMarker = englishMarker;
+  if (englishStartIndex === -1) {
+    englishStartIndex = fullText.indexOf(fallbackEnglishMarker);
+    actualEnglishMarker = fallbackEnglishMarker;
+  }
+
+  // Find the starting position of the Japanese block.
+  let japaneseStartIndex = fullText.indexOf(japaneseMarker);
+  let actualJapaneseMarker = japaneseMarker;
+  if (japaneseStartIndex === -1) {
+    japaneseStartIndex = fullText.indexOf(fallbackJapaneseMarker);
+    actualJapaneseMarker = fallbackJapaneseMarker;
+  }
+
+  // If the English marker was found, extract its content.
   if (englishStartIndex !== -1) {
-    const endOfEnglishIndex = (japaneseStartIndex > englishStartIndex) ? japaneseStartIndex : fullText.length;
-    englishContent = fullText.substring(englishStartIndex + englishMarker.length, endOfEnglishIndex).trim();
+    const contentStartIndex = englishStartIndex + actualEnglishMarker.length;
+    // The content ends where the Japanese block begins, or at the end of the whole text.
+    const contentEndIndex = (japaneseStartIndex !== -1 && japaneseStartIndex > englishStartIndex) ? japaneseStartIndex : fullText.length;
+    englishContent = fullText.substring(contentStartIndex, contentEndIndex).trim();
   }
 
+  // If the Japanese marker was found, extract its content.
   if (japaneseStartIndex !== -1) {
-    const endOfJapaneseIndex = (englishStartIndex > japaneseStartIndex) ? englishStartIndex : fullText.length;
-    japaneseContent = fullText.substring(japaneseStartIndex + japaneseMarker.length, endOfJapaneseIndex).trim();
+    const contentStartIndex = japaneseStartIndex + actualJapaneseMarker.length;
+    // The content ends where the English block begins, or at the end of the whole text.
+    const contentEndIndex = (englishStartIndex !== -1 && englishStartIndex > japaneseStartIndex) ? englishStartIndex : fullText.length;
+    japaneseContent = fullText.substring(contentStartIndex, contentEndIndex).trim();
   }
   
-  if (!englishContent && !japaneseContent) {
-     const fallbackSplit = fullText.split('### JAPANESE OUTPUT');
-     if (fallbackSplit.length > 1) {
-       englishContent = fallbackSplit[0].replace('### ENGLISH OUTPUT','').trim();
-       japaneseContent = fallbackSplit[1].trim();
-     }
-  }
-
   return {
     english: englishContent,
     japanese: japaneseContent
