@@ -277,20 +277,32 @@ ${englishRequirementsBoilerplateJP}
 }
 
 /**
- * Builds notes with headers in a specific language.
+ * MODIFIED: This function now iterates through ALL columns in the sheet to build the notes,
+ * instead of a predefined list. It still creates language-specific versions.
  */
 function buildInternalNotesContent(language, headers, rowData) {
   let notesContent = "";
-  INTERNAL_NOTES_COLUMN_HEADERS.forEach(bilingualHeader => {
-    const colIndex = headers.indexOf(bilingualHeader);
-    if (colIndex !== -1 && rowData[colIndex] && rowData[colIndex].toString().trim() !== '') {
+
+  // Loop through every header in the sheet. 'colIndex' is the position (0, 1, 2...).
+  headers.forEach((bilingualHeader, colIndex) => {
+    
+    // Get the data from the cell in the same position.
+    const cellData = rowData[colIndex];
+
+    // Check if the cell actually has data in it before adding it to the notes.
+    if (cellData && cellData.toString().trim() !== '') {
+      
+      // Split the bilingual header like "日本語ヘッダー / English Header"
       const headerParts = bilingualHeader.split(' / ');
       const jpHeader = headerParts[0];
+      // If there is an English part, use it; otherwise, just use the Japanese part.
       const enHeader = headerParts.length > 1 ? headerParts[1].trim() : jpHeader;
 
+      // Pick the correct header based on the 'language' parameter ('jp' or 'en').
       const chosenHeader = (language === 'en') ? enHeader : jpHeader;
       
-      notesContent += `${chosenHeader}:\n${rowData[colIndex]}\n\n`;
+      // Add the formatted line to our notes string.
+      notesContent += `${chosenHeader}:\n${cellData}\n\n`;
     }
   });
 
