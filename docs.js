@@ -138,16 +138,13 @@ function generateJdFromRow(rowIndex) {
     updateSheetWithLinks(sheet, rowIndex, headers, japaneseDocUrl, englishDocUrl);
 
   } catch (error) {
-    // Log errors with the specific row that failed
     Logger.log(`Error processing row ${rowIndex}: ${error.toString()}`);
     Logger.log(`Stack for row ${rowIndex}: ${error.stack}`);
-    // Optionally, write an error message to a cell in that row
-    // sheet.getRange(rowIndex, sheet.getLastColumn() + 1).setValue('ERROR: ' + error.message);
   }
 }
 
 // =================================================================
-// HELPER FUNCTIONS (The rest of your script, mostly unchanged)
+// HELPER FUNCTIONS
 // =================================================================
 
 function getSheetData(headers, rowData, headerName, defaultValue = '') {
@@ -163,12 +160,150 @@ function buildJdPrompt(headers, rowData) {
 
   if (!rawInformationBlock || rawInformationBlock.trim() === "") { return null; }
 
-  const preferredSkillsBoilerplateEN = `Experience in AI development and/or experience in using AI tools to improve development processes...`; // Full text
-  const preferredSkillsBoilerplateJP = `AIの開発経験もしくはAIツールを使用した開発経験...`; // Full text
-  const englishRequirementsBoilerplateEN = `(Note: If you have other qualifications or experiences demonstrating English proficiency...)`; // Full text
-  const englishRequirementsBoilerplateJP = `※TOEIC以外にも英語力がわかる資格や経験をお持ちの方はご相談ください...`; // Full text
+  const preferredSkillsBoilerplateEN = `Experience in AI development and/or experience in using AI tools to improve development processes.
+Money Forward recently announced our AI Strategy roadmap which focuses on improving AI-driven operational efficiencies, as well as integrating AI agents into our products to deliver better value to our users. (More information here)
+`;
+  const preferredSkillsBoilerplateJP = `AIの開発経験もしくはAIツールを使用した開発経験
+Money Forward AI Vision 2025にて発表の通り、マネーフォワードではAIを使った業務効率化に取り組んでいる状況かつ、将来的には全製品にAIエージェントを導入する想定であるため
+`;
+
+  const englishRequirementsBoilerplateEN = `(Note: If you have other qualifications or experiences demonstrating English proficiency, such as EIKEN Pre-1, EIKEN 2nd Grade (CSE score 1950+), TOEFL iBT 60+, IELTS 5.0+, or Cambridge FCE.), feel free to discuss with us) 
+For those without a TOEIC 700+ equivalent score, they will be asked to take a designated test during the interview process (generally after the first interview)
+`;
+  const englishRequirementsBoilerplateJP = `※TOEIC以外にも英語力がわかる資格や経験をお持ちの方はご相談ください
+例：英検準1級、英検2級（英検CSEスコア1950以上）、TOEFL iBT 60以上、IELTS 5.0以上、ケンブリッジ英語検定FCEなど
+※その他、英語力がわかる資格や経験については応相談
+※TOEIC 700点相当以上の資格をお持ちでない方については選考の過程で弊社指定の試験を受験いただきます。（原則、一次面接後を想定）
+`;
   
-  const prompt = `I would like help creating a job description...`; // The full, long prompt text goes here
+  const prompt = `
+I would like help creating a job description (JD) based on information from the hiring department.
+Your goal is to create an English version and Japanese version of the JD based on their respective output formats below. 
+
+### RAW INFORMATION
+Here is the data provided by the hiring manager. Use this information to fill out the templates below.
+${rawInformationBlock}
+
+### YOUR TASK 
+1. **Analyze**: Determine the primary language used in the RAW INFORMATION above. 
+2. **Write**: Create the complete job description in that primary language first, following its template. 
+3. **Translate**: Translate the version you just wrote into the other language, following its template. 
+4. **Expand**: If any section has minimal information, expand it to be 3-4 professional sentences. 
+5. **Omit**: If a section's information is blank, omit the entire section from the output. 
+6. **Format the Technology Lists**: For the 'Technology Stack' and 'Tools Used' sections, take the unstructured information from the information and organize it into a categorized list. **The final output should use the same categories as the example shown in the templates below.** If the manager's notes don't mention a category, omit that category from the final list.
+
+
+Final output format:
+
+### ENGLISH OUTPUT TEMPLATE
+
+Job Title 
+{job_title_content} 
+
+Background of the Recruitment 
+{recruitment_background_content} 
+
+Main Responsibilities 
+{main_responsibilities_content} 
+
+Job Satisfaction and Experience Gained 
+{experience_gained_content} 
+
+Expected Role 
+{expected_role_content} 
+
+Expected Mindset 
+{expected_mindset_content} 
+
+Desired Skills and Experience 
+{desired_skills_content} 
+
+Preferred Skills and Experience 
+{preferred_skills_content} 
+${preferredSkillsBoilerplateEN} 
+
+Japanese Language Requirements 
+{japanese_requirements_content} 
+
+English Language Requirements 
+{english_requirements_content} 
+${englishRequirementsBoilerplateEN} 
+
+We are looking for someone like this to join our team. 
+{ideal_candidate_content} 
+
+Technology Stack 
+・Web Server-side：Java (Jersey, Guice, jOOQ) 
+・Database：MySQL ・Middleware：Docker, Nginx, Consul 
+・Platform：AWS, オンプレミス 
+{additional_tech_stack_content} 
+
+Tools Used 
+・Repository Management ：GitHub ・CI/CD：CircleCI, Jenkins, Github Actions 
+・Development Environment ：Docker, Terraform Enterprise 
+・Monitoring ：DataDog, Rollbar, Sentry 
+・Communication ：Slack 
+・Security ：Dependabot {additional_tools_used_content} 
+
+Reference URL {reference_url_content}
+
+
+### JAPANESE OUTPUT TEMPLATE
+
+職種タイトル
+{job_title_content_jp}
+
+募集背景
+{recruitment_background_content_jp}
+
+主な業務内容
+{main_responsibilities_content_jp}
+
+仕事のやりがい・得られる経験
+{experience_gained_content_jp}
+
+期待する役割
+{expected_role_content_jp}
+
+期待するマインド
+{expected_mindset_content_jp}
+
+求めるスキル・経験
+{desired_skills_content_jp}
+
+あると望ましいスキル・経験
+{preferred_skills_content_jp}
+${preferredSkillsBoilerplateJP}
+
+日本語要件
+{japanese_requirements_content_jp}
+
+英語要件
+{english_requirements_content_jp}
+${englishRequirementsBoilerplateJP}
+
+こんな方に仲間になってほしい
+{ideal_candidate_content_jp}
+
+技術スタック
+・Webサーバーサイド：Java (Jersey, Guice, jOOQ)
+・データベース：MySQL
+・ミドルウェア：Docker, Nginx, Consul
+・プラットフォーム：AWS, オンプレミス
+{additional_tech_stack_content_jp}
+
+使用ツール
+・リポジトリ管理：GitHub
+・CI/CD：CircleCI, Jenkins, Github Actions
+・開発環境：Docker, Terraform Enterprise
+・監視：DataDog, Rollbar, Sentry
+・コミュニケーション：Slack
+・セキュリティ：Dependabot
+{additional_tools_used_content_jp}
+
+参考URL
+{reference_url_content_jp}
+  `;
    return prompt;
 }
 
